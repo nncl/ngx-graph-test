@@ -1,35 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { LazyLoaderService } from './services/LazyLoader/lazy-loader.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  single: any[] = [
-    {
-      'name': 'Germany',
-      'value': 8940000
-    },
-    {
-      'name': 'USA',
-      'value': 5000000
-    },
-    {
-      'name': 'France',
-      'value': 7200000
-    }
-  ];
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
+export class AppComponent implements OnInit {
+  @ViewChild('container', {read: ViewContainerRef, static: false}) container: ViewContainerRef;
 
-  constructor() {
-    const {single} = this;
-    Object.assign(this, {single});
+
+  constructor(private loader: LazyLoaderService) {
   }
 
-  onSelect(event) {
-    console.log(event);
+  ngOnInit(): void {
+    setTimeout(() => this.load(), 2000);
+  }
+
+  load() {
+    this.container.clear();
+    this.loader.load('lazyloadmodulecomponent', this.container);
   }
 }
